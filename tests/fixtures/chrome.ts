@@ -79,7 +79,33 @@ export function memoryChrome() {
       onAlarm: alarm,
     },
     sidePanel: { open: vi.fn(async (_options: { windowId: number }) => undefined) },
-    tabs: { create: vi.fn(async (_options: { url: string }) => ({ id: 1 })) },
+    tabs: {
+      create: vi.fn(async (_options: { url: string }) => ({ id: 1 })),
+      query: vi.fn(async (_query: chrome.tabs.QueryInfo): Promise<chrome.tabs.Tab[]> => [
+        {
+          id: 2,
+          url: 'https://www.tradingview.com/chart/?symbol=BINANCE%3ABTCUSDT&interval=60',
+        } as chrome.tabs.Tab,
+      ]),
+    },
+    scripting: {
+      executeScript: vi.fn(
+        async (
+          _options: chrome.scripting.ScriptInjection<[], unknown>,
+        ): Promise<chrome.scripting.InjectionResult[]> => [
+          {
+            documentId: 'fixture-document',
+            frameId: 0,
+            result: {
+              host: 'www.tradingview.com',
+              title: 'BTCUSDT chart',
+              symbols: ['BINANCE:BTCUSDT'],
+              intervals: ['60'],
+            },
+          },
+        ],
+      ),
+    },
   };
   const dispatch = (message: unknown, from = sender()): Promise<ExtensionReply | undefined> =>
     new Promise((resolve) => {

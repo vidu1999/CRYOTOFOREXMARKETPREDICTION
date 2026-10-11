@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Vector Live — Crypto & Forex",
-  "version": "1.0.0",
-  "description": "Live crypto and forex quotes, 12-timeframe technical forecasts, historical evidence, and risk sizing. No auto-trading.",
+  "version": "1.1.0",
+  "description": "Chart-page market detection, live BUY/SELL/WAIT research and forward paper win/loss tracking. No order execution.",
   "minimum_chrome_version": "116",
   "action": {
     "default_title": "Vector Live — Market intelligence",
@@ -31,7 +31,7 @@
     "page": "options.html",
     "open_in_tab": true
   },
-  "permissions": ["storage", "alarms", "sidePanel"],
+  "permissions": ["storage", "alarms", "sidePanel", "activeTab", "scripting"],
   "host_permissions": ["https://data-api.binance.vision/*", "https://api.twelvedata.com/*"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://data-api.binance.vision https://api.twelvedata.com; base-uri 'self';"

@@ -253,6 +253,24 @@ export default function ExtensionOptions() {
               }
             />
           </div>
+          <div className="ex-option-switch">
+            <div>
+              <strong>Check recorded paper predictions in background</strong>
+              <p>
+                Opt-in: once/minute while pending calls exist. Uses additional 1-minute history
+                requests, not trades. Provider quotas can delay results; missing data is not a loss.
+              </p>
+            </div>
+            <input
+              type="checkbox"
+              aria-label="Background prediction checks"
+              disabled={!installed}
+              checked={preferences.predictionAutoCheck}
+              onChange={(e) =>
+                setPreferences((p) => ({ ...p, predictionAutoCheck: e.target.checked }))
+              }
+            />
+          </div>
           <div className="ex-options-input-grid">
             <label>
               Crypto costs / side · bps
@@ -349,10 +367,11 @@ export default function ExtensionOptions() {
           <strong>Live data does not make the future certain.</strong>
           <p>
             The forecast is an explainable, rule-based technical ensemble—not trained AI, a
-            calibrated probability, or validated investment advice. The extension reads no webpages
-            or exchange balances and places no orders. Backtests omit slippage, funding, borrowing,
-            tax and broker constraints. Stops, accuracy, returns and passive income are not
-            guaranteed.
+            calibrated probability, or validated investment advice. Only an explicit Analyze Page
+            click reads bounded chart metadata; balances, cookies and screenshots are never read. No
+            orders are placed. Backtests and forward paper results omit slippage, funding,
+            borrowing, tax and broker constraints. Stops, accuracy, returns and passive income are
+            not guaranteed.
           </p>
           <p>
             12H forex candles are aggregated from complete 4H UTC buckets. Provider gaps are not

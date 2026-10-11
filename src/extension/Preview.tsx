@@ -101,7 +101,10 @@ export default function ExtensionPreview() {
               </span>
               <div>
                 <strong>A signal you can question</strong>
-                <p>See indicators, historical evidence, costs, and uncertainty—not a black box.</p>
+                <p>
+                  Record BUY / SELL / WAIT calls. Track later stop/target outcomes, costs, and
+                  uncertainty.
+                </p>
               </div>
             </div>
             <div>
@@ -110,7 +113,10 @@ export default function ExtensionPreview() {
               </span>
               <div>
                 <strong>Data, not your trading account</strong>
-                <p>No webpage scraping, exchange passwords, automatic orders or synced API keys.</p>
+                <p>
+                  Click-to-read chart metadata. No balances, screenshots, exchange passwords, or
+                  orders.
+                </p>
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 # Vector Live — Chrome / Edge Crypto & Forex Extension
 
-An **installable Manifest V3 desktop browser extension**, not just a web dashboard. It provides a toolbar popup, native side panel, live-provider quote snapshots, 12-timeframe technical analysis, historical evidence, and hypothetical risk sizing.
+An **installable Manifest V3 desktop browser extension**, not just a web dashboard. It provides a toolbar popup, native side panel, live-provider quote snapshots, 12-timeframe technical analysis, historical evidence, page-based BUY/SELL/WAIT calls, a persistent forward paper win/loss ledger, and hypothetical risk sizing.
 
 **Real market data or an explicit error—never a demo-price fallback.** This is rule-based technical research, not trained AI, a calibrated prediction probability, an automated trader, or guaranteed passive income.
 
@@ -57,6 +57,16 @@ A causal technical ensemble combines ATR-normalized EMA 20/50 trend (50%), MACD 
 
 Target/invalidation references are 2.4 / 1.2 ATR offsets from that completed close, not executable orders or guaranteed limits. Neutral signals suggest no directional setup. Independently validated real-world accuracy is **not established**.
 
+## Page-based future calls and wins/losses (v1.1)
+
+Open your chart, click the Vector toolbar icon, and expand **Page → BUY / SELL / WAIT**. **Analyze current chart page** detects bounded symbol/timeframe metadata. Confirm the supported market/timeframe, load reference data, check the paper-research confirmation and record the call. No AI key or screenshot upload is required.
+
+The worker records the model-derived action and a fresh reference **entry, 1.2 ATR stop, 2.4 ATR target, current-candle expiry, source/decision times, notional and both-side fees before later prices**. One immutable call per market/timeframe/expiry prevents hindsight replacement. BTC/USD is not silently mapped to BTC/USDT, and broker/perpetual prices are not claimed as spot fills.
+
+Press **Check outcomes** later or explicitly enable background checks. Closed **1-minute** history resolves stop/target/expiry outcomes. Unknown both-level order, partial entry-minute level touches and history gaps are **ambiguous**, not claimed wins. Missing/delayed data or API errors stays pending. WAIT is an abstention. Forward net win rate, wins/losses/flat, pending/ambiguous/WAIT counts and net hypothetical P&L are separate from historical backtests. USD and USDT totals stay separate.
+
+The installed local ledger survives restarts, fee/selection changes and price-cache clears; export all records before an entire-ledger reset. It holds up to 500 calls and does not silently discard unresolved/losing records. Preview calls are in-memory only; page access and background checks require the installed extension. Read [the full workflow, scoring and privacy assumptions](docs/PAPER_PREDICTIONS.md).
+
 ### Historical evidence
 
 The Evidence tab evaluates the latest available 250 bars after a 50-bar warm-up. Previous-close signals enter at next open and exit at that candle's close, at 1× current equity with costs on both sides. Neutral signals abstain; flat returns are excluded from directional scoring. It displays sample count, directional hit rate, previous-candle baseline, approximate Wilson 95% interval, net return and drawdown.
@@ -71,13 +81,13 @@ Sizing is hypothetical, cash-capped, includes modeled costs and adds no leverage
 
 ## Credentials, permissions and privacy
 
-- Only `storage`, `alarms`, `sidePanel` permissions and two exact market-provider host permissions.
-- No content scripts, page scraping, exchange authentication, transaction signing, order execution, telemetry, analytics, external fonts or backend.
+- `storage`, `alarms`, `sidePanel`, plus user-triggered temporary `activeTab` / `scripting`, and two exact market-provider host permissions. No permanent all-sites access.
+- No persistent content scripts, full-page/account scraping, screenshots, exchange authentication, transaction signing, order execution, telemetry, analytics, external fonts or backend. Explicit Analyze Page reads only bounded chart metadata; only its hostname is retained with a call.
 - Key entry/read/save/test is allowed only on the **same-extension native options page**. The website preview cannot accept/store a forex key, even when Chrome-like APIs are injected into it.
 - Keys use **`chrome.storage.local`**, restricted to trusted extension contexts—not sync. This is **not encrypted secret-vault storage**: anyone with access to your browser profile may access it. Use a dedicated, least-privilege market-data key.
-- Quotes/history/errors and request budget use `chrome.storage.session` (browser-session cache). Public state and exports exclude the key. Provider error messages redact known/query-style API keys.
+- Preferences and forward prediction records use local trusted-context storage; no sync. Quotes/history/errors and request budget use `chrome.storage.session` (browser-session cache). Public state and exports exclude the key. Provider error messages redact known/query-style API keys.
 - Requests omit cookies and referrers. Twelve Data's API uses the key as an HTTPS query parameter; it is visible in your own browser network tools and to that provider.
-- Remove key → **Save settings** to delete it. Clear cache removes snapshots/errors without bypassing request budgets. Removing the extension removes its local profile storage.
+- Remove key → **Save settings** to delete it. Clear price cache removes snapshots/errors without bypassing request budgets or deleting recorded predictions. Ledger clearing is a separate, confirmed whole-ledger reset. Removing the extension removes its local profile storage.
 
 ## Build and develop
 

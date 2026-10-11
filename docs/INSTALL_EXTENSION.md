@@ -43,7 +43,15 @@ The key stays in this browser profile's local extension storage, not sync/export
 
 Forex coverage, latency, history and quotas depend on your plan. A successful key test does not guarantee 600 candles or access to every timeframe. No paid plan or live connection has been set up for you. The website preview deliberately disables API-key entry.
 
-## 5. Check the installed runtime and actual feeds
+## 5. Read a chart and measure future predictions
+
+Open your chart tab, click the Vector toolbar icon to grant temporary page access, and expand **Page → BUY / SELL / WAIT**. Click **Analyze current chart page**, verify the detected pair/timeframe (or choose manually), then **Use confirmed chart**. No screenshot or AI API/key is used. Reference feeds may differ from your chart's broker; BTC/USD is not BTC/USDT.
+
+Check the paper-research confirmation, set a hypothetical notional, and click **Record BUY / SELL / WAIT prediction**. Entry, stop, target, expiry, source/decision times and costs are saved before future prices. Later press **Check outcomes**, or opt in to background prediction checks for automatic updates. Unknown both-level/entry-minute order is ambiguous, never invented as a win. Results are paper P&L, not your real account profit.
+
+The installed ledger survives restart and price-cache clearing. Export all predictions before clearing the entire ledger. See [the detailed prediction/scoring guide](PAPER_PREDICTIONS.md). If updating from v1.0, reload the replaced folder and approve Chrome's new temporary `activeTab` / `scripting` permissions if prompted; no permanent all-sites permission is requested.
+
+## 6. Check the installed runtime and actual feeds
 
 The provided package has automated fixture-based validation, but this sandbox could not run native Chrome extensions or contact real market-provider endpoints. In your installed browser, check:
 
@@ -56,23 +64,30 @@ The provided package has automated fixture-based validation, but this sandbox co
 - [ ] Pause stops automatic refresh; manual refresh still works.
 - [ ] Background polling stays off unless you explicitly enable it.
 - [ ] Disconnecting the network produces a visible error rather than invented prices.
-- [ ] Export contains timestamps/limitations and no API key.
+- [ ] After a toolbar click on your chart, Analyze Page shows only chart metadata; confirm detection manually if missing/ambiguous.
+- [ ] Recording creates exactly one paper call with locked entry/stop/target/expiry; repeated clicks cannot overwrite it.
+- [ ] Check outcomes uses later minute history; ambiguous/pending calls are not reported as wins.
+- [ ] Close/reopen the browser and clear only quote cache: the ledger remains; USD/USDT totals are separate.
+- [ ] Both background quote refresh and prediction checks stay off until explicitly enabled.
+- [ ] Snapshot/ledger exports contain timestamps/limitations and no API key.
 
 None of these checks establishes future predictive accuracy. Compare provider quotes with an independent source and use paper trading/untouched historical evaluation before risking capital.
 
 ## Troubleshooting
 
-| Symptom                     | What to check                                                                                        |
-| --------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Cannot find `manifest.json` | Select the extracted inner `vector-live-extension` folder, not the ZIP/repository/source folder      |
-| Worker unavailable          | Reload on the browser's extensions page and reopen the popup; inspect the service-worker error list  |
-| Side panel does not open    | Update Chrome/Edge; native opening requires a user click; use the extension-tab fallback             |
-| Crypto feed unavailable     | Provider outage, regional/network restrictions or offline device; no simulated substitute is used    |
-| Forex setup required        | Save the key in the installed extension's native settings, then manually refresh                     |
-| HTTP/provider/plan error    | Verify Twelve Data key validity, forex access, interval/history coverage and provider quotas         |
-| Rate-limit/cooldown         | Wait for the window, reduce refresh/requests or check your plan; clearing cache does not reset quota |
-| Valid quote, old history    | The outlook is historical; check provider history coverage, date/clock and requested interval        |
-| Fewer than 50 closed bars   | Choose another timeframe/history plan; no directional signal is generated                            |
-| Timestamp ahead of device   | Check system time; do not use a falsely fresh signal                                                 |
+| Symptom                     | What to check                                                                                                                   |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Cannot find `manifest.json` | Select the extracted inner `vector-live-extension` folder, not the ZIP/repository/source folder                                 |
+| Chart page cannot be read   | Return to a normal website, click the Vector toolbar icon and retry; use manual confirmation for unsupported metadata           |
+| Prediction remains pending  | Wait for closed minute history; check key/plan/quota/connectivity. Repeated checks advance long backlogs; no loss is fabricated |
+| Worker unavailable          | Reload on the browser's extensions page and reopen the popup; inspect the service-worker error list                             |
+| Side panel does not open    | Update Chrome/Edge; native opening requires a user click; use the extension-tab fallback                                        |
+| Crypto feed unavailable     | Provider outage, regional/network restrictions or offline device; no simulated substitute is used                               |
+| Forex setup required        | Save the key in the installed extension's native settings, then manually refresh                                                |
+| HTTP/provider/plan error    | Verify Twelve Data key validity, forex access, interval/history coverage and provider quotas                                    |
+| Rate-limit/cooldown         | Wait for the window, reduce refresh/requests or check your plan; clearing cache does not reset quota                            |
+| Valid quote, old history    | The outlook is historical; check provider history coverage, date/clock and requested interval                                   |
+| Fewer than 50 closed bars   | Choose another timeframe/history plan; no directional signal is generated                                                       |
+| Timestamp ahead of device   | Check system time; do not use a falsely fresh signal                                                                            |
 
 **No guaranteed accuracy, profitable next move or passive income.** This extension performs explainable technical research and hypothetical sizing, not order execution or investment management.

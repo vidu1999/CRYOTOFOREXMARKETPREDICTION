@@ -55,6 +55,35 @@ test('packaged MV3 loads native worker, popup and private options with real brow
     await expect(popup.locator('.ex-live-quote')).toContainText('108.12');
     const state = await popup.evaluate(() => chrome.runtime.sendMessage({ type: 'GET_STATE' }));
     expect(JSON.stringify(state)).not.toContain('fixture-native-only-key');
+    const granted = await popup.evaluate(() => chrome.permissions.getAll());
+    expect(granted.permissions).toEqual(expect.arrayContaining(['activeTab', 'scripting']));
+    expect(granted.origins).not.toContain('<all_urls>');
+    expect(await popup.evaluate(() => typeof chrome.scripting.executeScript)).toBe('function');
+    await popup.getByRole('button', { name: /Page → BUY \/ SELL \/ WAIT/ }).click();
+    await popup
+      .getByLabel('I confirm this market/timeframe and understand these are paper results.')
+      .check();
+    await popup.getByRole('button', { name: 'Record BUY prediction', exact: true }).click();
+    await expect(popup.locator('.ex-outcome')).toHaveText('PENDING');
+    const recorded = await popup.evaluate(
+      async () =>
+        (await chrome.storage.local.get('vector.live.predictions'))['vector.live.predictions'],
+    );
+    expect(recorded).toHaveLength(1);
+    expect(recorded[0]).toMatchObject({
+      action: 'BUY',
+      status: 'pending',
+      accountCurrency: 'USDT',
+      outcome: null,
+    });
+    expect(JSON.stringify(recorded)).not.toContain('fixture-native-only-key');
+    await popup.reload();
+    await popup.getByRole('button', { name: /Page → BUY \/ SELL \/ WAIT/ }).click();
+    await expect(popup.locator('.ex-outcome')).toHaveText('PENDING');
+    const cacheClear = await popup.evaluate(() =>
+      chrome.runtime.sendMessage({ type: 'CLEAR_CACHE' }),
+    );
+    expect(cacheClear.state.predictions).toHaveLength(1);
     const denied = await popup.evaluate(() => chrome.runtime.sendMessage({ type: 'GET_OPTIONS' }));
     expect(denied).toMatchObject({ ok: false });
     await options.getByRole('button', { name: 'Test connection' }).click();

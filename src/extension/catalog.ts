@@ -129,6 +129,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   timeframe: '1h',
   autoRefresh: true,
   backgroundRefresh: false,
+  predictionAutoCheck: false,
   favorites: ['BTCUSDT', 'ETHUSDT', 'EURUSD'],
   cryptoFeeBps: 10,
   forexFeeBps: 1,
@@ -154,6 +155,7 @@ export function normalizePreferences(value: unknown): Preferences {
       : DEFAULT_PREFERENCES.timeframe,
     autoRefresh: typeof p.autoRefresh === 'boolean' ? p.autoRefresh : true,
     backgroundRefresh: typeof p.backgroundRefresh === 'boolean' ? p.backgroundRefresh : false,
+    predictionAutoCheck: typeof p.predictionAutoCheck === 'boolean' ? p.predictionAutoCheck : false,
     favorites: Array.isArray(p.favorites)
       ? [
           ...new Set(
@@ -221,4 +223,17 @@ export function liveTimestamp(time: number | null, compact = false): string {
       minute: '2-digit',
     }) + ' UTC'
   );
+}
+
+export function currentCandleOpen(time: number, timeframe: LiveTimeframe): number {
+  const date = new Date(time);
+  if (timeframe === '1mo') return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1);
+  if (timeframe === '1w')
+    return Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate() - ((date.getUTCDay() + 6) % 7),
+    );
+  const duration = LIVE_TIMEFRAMES.find((t) => t.id === timeframe)!.duration;
+  return Math.floor(time / duration) * duration;
 }

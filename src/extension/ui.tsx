@@ -1,3 +1,4 @@
+import PredictionWorkflow from './PredictionWorkflow';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import {
   ArrowDownRight,
@@ -954,6 +955,7 @@ export function ExtensionWorkspace({ preview = false }: { preview?: boolean }) {
           </div>
         </>
       )}
+      <PredictionWorkflow state={state} onState={setState} />
       <div className="ex-favorites">
         <span>SAVED</span>
         {preferences.favorites.map((id) => {

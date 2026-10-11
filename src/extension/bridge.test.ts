@@ -114,3 +114,40 @@ describe('installed browser API bridge', () => {
     });
   });
 });
+
+describe('temporary public-preview forward ledger', () => {
+  it('refuses page access in the public website preview', async () => {
+    const bridge = await import('./bridge');
+    const reply = await bridge.extensionRequest({ type: 'READ_ACTIVE_PAGE' });
+    expect(reply).toMatchObject({
+      ok: false,
+      error: expect.stringContaining('installed extension'),
+    });
+  });
+  it('serializes records and whole-ledger clears, leaves records through price-cache clears, and excludes credentials', async () => {
+    const { FIXTURE_NOW } = await import('../../tests/fixtures/live');
+    vi.spyOn(Date, 'now').mockReturnValue(FIXTURE_NOW);
+    const network = vi.fn(async (url: string) => fixtureResponse(url));
+    vi.stubGlobal('fetch', network);
+    const bridge = await import('./bridge'),
+      request = {
+        type: 'RECORD_PREDICTION',
+        marketId: 'BTCUSDT',
+        timeframe: '1h',
+        notional: 1000,
+        confirmed: true,
+      } as const;
+    const result = await Promise.all([
+      bridge.extensionRequest(request),
+      bridge.extensionRequest(request),
+    ]);
+    expect(result.filter((r) => r.ok)).toHaveLength(1);
+    const state = await bridge.extensionRequest({ type: 'CLEAR_CACHE' });
+    expect(state.ok && state.state.predictions).toHaveLength(1);
+    expect(JSON.stringify(state)).not.toMatch(/"forexKey"|apikey/i);
+    const denied = await bridge.extensionRequest({ type: 'CLEAR_PREDICTIONS', confirmed: false });
+    expect(denied.ok).toBe(false);
+    const cleared = await bridge.extensionRequest({ type: 'CLEAR_PREDICTIONS', confirmed: true });
+    expect(cleared.ok && cleared.state.predictions).toEqual([]);
+  });
+});

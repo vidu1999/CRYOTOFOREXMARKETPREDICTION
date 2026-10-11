@@ -2308,3 +2308,346 @@ body[data-surface='options'] {
   padding: 10px;
   margin-bottom: 15px;
 }
+/* Forward-recorded paper calls, separate from the historical backtest */
+.ex-forward {
+  border-top: 1px solid #2d4357;
+  background: #111f2d;
+}
+.ex-forward-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 17px;
+  width: 100%;
+  text-align: left;
+  color: #9fceba;
+}
+.ex-forward-heading > span {
+  display: grid;
+  grid-template-columns: 17px 1fr;
+  gap: 6px 7px;
+  align-items: center;
+}
+.ex-forward-heading strong {
+  font-size: 11px;
+  font-weight: 550;
+}
+.ex-forward-heading small {
+  grid-column: 2;
+  font-size: 8px;
+  color: #829eaf;
+}
+.ex-forward-heading > .is-open {
+  transform: rotate(180deg);
+}
+.ex-forward-body {
+  padding: 0 17px 17px;
+}
+.ex-forward-intro {
+  font-size: 9px;
+  color: #8aabbd;
+  line-height: 1.8;
+  margin-bottom: 13px;
+}
+.ex-forward-mini {
+  font-size: 8px;
+  color: #7fa4b4;
+  line-height: 1.8;
+  margin-top: 10px;
+}
+.ex-page-reading {
+  border: 1px solid #39536a;
+  border-radius: 6px;
+  background: #172b3d;
+  padding: 12px;
+  margin-top: 15px;
+}
+.ex-page-reading > span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  color: #9cbfd1;
+}
+.ex-page-reading > p {
+  font-size: 9px;
+  color: #bed2df;
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+  line-height: 1.8;
+}
+.ex-page-reading > small {
+  display: block;
+  color: #c0ad8c;
+  font-size: 8px;
+  line-height: 1.8;
+  margin-top: 9px;
+}
+.ex-page-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 13px 0;
+}
+.ex-page-inputs label {
+  font-size: 8px;
+}
+.ex-page-inputs select {
+  font-size: 10px;
+  padding: 8px;
+  min-height: 34px;
+}
+.ex-record-call {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 7px;
+  border: 1px solid #3b6254;
+  background: #1e382c3d;
+}
+.ex-call-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 15px;
+  font-size: 10px;
+  color: #adccbf;
+}
+.ex-action {
+  display: inline-block;
+  border-radius: 4px;
+  border: 1px solid #49755777;
+  padding: 4px 6px;
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  background: #31573f44;
+  color: #98e4be;
+}
+.ex-action.sell {
+  color: #e2a0b4;
+  border-color: #86536877;
+  background: #56314844;
+}
+.ex-action.wait {
+  color: #a4bfd4;
+  background: #2c455366;
+  border-color: #3d617a;
+}
+.ex-record-call > label:not(.ex-forward-confirm) {
+  font-size: 9px;
+}
+.ex-record-call > label > input[type='number'] {
+  min-height: 34px;
+  font-size: 11px;
+  padding: 8px 10px;
+}
+.ex-forward-confirm {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 9px;
+  color: #a0bfb0;
+  line-height: 1.8;
+  margin: 13px 0;
+  cursor: pointer;
+}
+.ex-forward-confirm input {
+  width: 13px;
+  height: 13px;
+  min-height: 13px;
+  margin: 2px 0 0;
+  padding: 0;
+  flex-shrink: 0;
+  accent-color: #68cca1;
+}
+.ex-record-call > p {
+  font-size: 8px;
+  color: #8aa799;
+  line-height: 1.8;
+  margin-top: 13px;
+}
+.ex-forward-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
+  margin-top: 17px;
+}
+.ex-forward-stats > div {
+  padding: 13px;
+  background: #162938;
+  border: 1px solid #304b60;
+  border-radius: 6px;
+}
+.ex-forward-stats span {
+  font-size: 8px;
+  color: #83a7bd;
+}
+.ex-forward-stats strong {
+  font-size: 26px;
+  display: block;
+  margin-top: 11px;
+  color: #b3d5c6;
+  font-weight: 550;
+  letter-spacing: -0.7px;
+}
+.ex-forward-stats strong b {
+  font-weight: 550;
+}
+.ex-forward-stats small {
+  display: block;
+  font-size: 7px;
+  color: #7f9fad;
+  line-height: 1.7;
+  margin-top: 9px;
+}
+.ex-forward-pnl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px 10px;
+  padding: 13px 1px;
+  border-bottom: 1px solid #2d4357;
+  color: #90b9a5;
+  font-size: 9px;
+}
+.ex-forward-pnl > span {
+  flex-basis: 100%;
+  font-size: 8px;
+  color: #7d9fb1;
+}
+.ex-forward-pnl strong {
+  font-size: 12px;
+  font-weight: 550;
+}
+.ex-forward-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 13px 0;
+}
+.ex-forward-tools > .ex-button {
+  margin-right: auto;
+}
+.ex-forward-body > .ex-notice,
+.ex-forward-body > .ex-failure {
+  margin: 10px 0;
+}
+.ex-forward-records {
+  display: grid;
+  gap: 11px;
+  margin-top: 14px;
+}
+.ex-forward-records > p {
+  padding: 18px 4px;
+  text-align: center;
+  font-size: 9px;
+  color: #7b9bb1;
+  line-height: 1.8;
+}
+.ex-forward-row {
+  background: #122737;
+  border: 1px solid #304d62;
+  border-radius: 6px;
+  padding: 12px;
+}
+.ex-forward-row > header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.ex-forward-row > header > strong {
+  font-size: 9px;
+  color: #a9c8d5;
+  flex: 1;
+}
+.ex-outcome {
+  font-size: 6px;
+  letter-spacing: 0.5px;
+  color: #a4bdcd;
+  white-space: nowrap;
+  border: 1px solid #3c586c;
+  padding: 3px 4px;
+  border-radius: 3px;
+}
+.ex-outcome.win {
+  color: #8fd4ae;
+  border-color: #446d55;
+}
+.ex-outcome.loss {
+  color: #de9aac;
+  border-color: #794759;
+}
+.ex-outcome.ambiguous {
+  color: #d3b988;
+  border-color: #786747;
+}
+.ex-forward-row > p {
+  font-size: 7px;
+  color: #7d9eb3;
+  line-height: 1.8;
+  margin-top: 9px;
+}
+.ex-forward-row > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 8px;
+  color: #a4c2d1;
+  margin-top: 10px;
+}
+.ex-forward-row > strong {
+  font-size: 13px;
+  display: block;
+  margin-top: 10px;
+  font-weight: 550;
+}
+.ex-forward-row > .ex-forward-check-error {
+  color: #c2b088;
+}
+.ex-forward-limitations {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 8px;
+  color: #849f91;
+  line-height: 1.8;
+  border-top: 1px solid #345040;
+  padding-top: 14px;
+  margin-top: 16px;
+}
+@media (max-width: 360px) {
+  .ex-forward-body {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+  .ex-forward-heading {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+  .ex-forward-heading strong {
+    font-size: 10px;
+  }
+  .ex-record-call {
+    padding: 12px;
+  }
+  .ex-forward-confirm {
+    font-size: 8px;
+  }
+  .ex-forward-stats > div {
+    padding: 11px;
+  }
+  .ex-forward-row {
+    padding: 10px;
+  }
+  .ex-forward-row > header {
+    gap: 5px;
+  }
+  .ex-forward-row > header > strong {
+    font-size: 8px;
+  }
+  .ex-outcome {
+    font-size: 5px;
+  }
+}

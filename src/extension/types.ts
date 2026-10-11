@@ -17,6 +17,7 @@ export interface Preferences {
   timeframe: LiveTimeframe;
   autoRefresh: boolean;
   backgroundRefresh: boolean;
+  predictionAutoCheck: boolean;
   favorites: string[];
   cryptoFeeBps: number;
   forexFeeBps: number;
@@ -60,6 +61,7 @@ export interface WorkspaceState {
   settings: PublicSettings;
   snapshot: LiveSnapshot | null;
   failure: FeedFailure | null;
+  predictions?: PaperPrediction[];
 }
 export type ExtensionMessage =
   | { type: 'GET_STATE' }
@@ -68,7 +70,83 @@ export type ExtensionMessage =
   | { type: 'GET_OPTIONS' }
   | { type: 'SAVE_FOREX_KEY'; key: string }
   | { type: 'TEST_FOREX_KEY'; key: string }
-  | { type: 'CLEAR_CACHE' };
+  | { type: 'CLEAR_CACHE' }
+  | { type: 'READ_ACTIVE_PAGE' }
+  | {
+      type: 'RECORD_PREDICTION';
+      marketId: string;
+      timeframe: LiveTimeframe;
+      notional: number;
+      confirmed: boolean;
+      pageHost?: string;
+    }
+  | { type: 'CHECK_PREDICTIONS' }
+  | { type: 'CLEAR_PREDICTIONS'; confirmed: boolean };
 export type ExtensionReply =
-  | { ok: true; state: WorkspaceState; forexKey?: string; testMessage?: string }
+  | {
+      ok: true;
+      state: WorkspaceState;
+      forexKey?: string;
+      testMessage?: string;
+      pageReading?: PageReading;
+      prediction?: PaperPrediction;
+    }
   | { ok: false; error: string };
+
+export interface PageReading {
+  host: string;
+  title: string;
+  marketId: string | null;
+  timeframe: LiveTimeframe | null;
+  readAt: number;
+  warning: string;
+}
+export type PredictionAction = 'BUY' | 'SELL' | 'WAIT';
+export type PredictionStatus = 'pending' | 'win' | 'loss' | 'flat' | 'ambiguous' | 'abstained';
+export interface PredictionOutcome {
+  reason:
+    | 'target'
+    | 'stop'
+    | 'target_gap'
+    | 'stop_gap'
+    | 'expiry'
+    | 'both_levels'
+    | 'entry_minute'
+    | 'missing_history';
+  assessedAt: number;
+  barStart: number;
+  barEnd: number;
+  exitPrice: number | null;
+  grossPnl: number | null;
+  fees: number | null;
+  netPnl: number | null;
+  returnPercent: number | null;
+}
+export interface PaperPrediction {
+  schema: 1;
+  id: string;
+  model: 'technical-v1';
+  marketId: string;
+  timeframe: LiveTimeframe;
+  provider: FeedHistory['provider'];
+  action: PredictionAction;
+  strength: number;
+  createdAt: number;
+  entryAsOf: number;
+  basisClosedAt: number;
+  entry: number;
+  atr: number;
+  stop: number | null;
+  target: number | null;
+  expiresAt: number;
+  notional: number;
+  units: number;
+  accountCurrency: 'USDT' | 'USD';
+  feeBps: number;
+  pageHost: string | null;
+  status: PredictionStatus;
+  nextBarAt: number;
+  lastCheckedAt: number | null;
+  checkError: string | null;
+  outcome: PredictionOutcome | null;
+}

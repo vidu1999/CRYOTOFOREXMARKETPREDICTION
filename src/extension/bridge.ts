@@ -1,5 +1,7 @@
 import { DEFAULT_PREFERENCES, normalizePreferences } from './catalog';
 import { buildLiveSnapshot, feedFailure } from './service';
+import { evaluatePrediction, LEDGER_LIMIT, makePrediction, predictionKey } from './predictions';
+import { fetchOutcomeBars } from './prediction-feed';
 import { STORAGE_KEYS } from './storage';
 import type { ExtensionMessage, ExtensionReply, Preferences, WorkspaceState } from './types';
 
@@ -16,9 +18,19 @@ let browserState: WorkspaceState = {
   settings: { preferences: DEFAULT_PREFERENCES, hasForexKey: false },
   snapshot: null,
   failure: null,
+  predictions: [],
 };
 const listeners = new Set<() => void>();
 let browserRevision = 0;
+let browserLedgerQueue: Promise<void> = Promise.resolve();
+function queueBrowserLedger<T>(work: () => Promise<T>): Promise<T> {
+  const task = browserLedgerQueue.catch(() => undefined).then(work);
+  browserLedgerQueue = task.then(
+    () => undefined,
+    () => undefined,
+  );
+  return task;
+}
 const browserPending = new Map<string, Promise<ExtensionReply>>();
 function emit() {
   for (const listener of listeners) listener();
@@ -37,6 +49,88 @@ export async function extensionRequest(message: ExtensionMessage): Promise<Exten
   }
   // Optional browser preview supports PUBLIC crypto only. Never accepts/stores a forex key.
   switch (message.type) {
+    case 'READ_ACTIVE_PAGE':
+      return {
+        ok: false,
+        error:
+          'Page detection requires the installed extension. Open a chart tab and click its toolbar icon. No page content is read in this website preview.',
+      };
+    case 'RECORD_PREDICTION':
+      return queueBrowserLedger(async (): Promise<ExtensionReply> => {
+        if (!message.confirmed)
+          return { ok: false, error: 'Confirm the selected market/timeframe first.' };
+        if (
+          message.marketId !== browserState.settings.preferences.marketId ||
+          message.timeframe !== browserState.settings.preferences.timeframe
+        )
+          return { ok: false, error: 'The market/timeframe changed. Confirm it again.' };
+        const revision = browserRevision;
+        await extensionRequest({ type: 'REFRESH', force: true });
+        if (revision !== browserRevision || browserState.failure || !browserState.snapshot)
+          return {
+            ok: false,
+            error: browserState.failure?.message ?? 'No fresh verified snapshot is available.',
+          };
+        try {
+          const prediction = makePrediction(
+            browserState.snapshot,
+            browserState.settings.preferences,
+            message.notional,
+            Date.now(),
+          );
+          const records = browserState.predictions ?? [];
+          if (records.some((p) => predictionKey(p) === predictionKey(prediction)))
+            throw new Error(
+              'One prediction per market/timeframe/expiry is allowed; it cannot be replaced after price moves.',
+            );
+          if (records.length >= LEDGER_LIMIT)
+            throw new Error('The local ledger is full. Export and clear all records.');
+          browserState = { ...browserState, predictions: [...records, prediction] };
+          emit();
+          return { ok: true, state: browserState, prediction };
+        } catch (error) {
+          return {
+            ok: false,
+            error: error instanceof Error ? error.message : 'Prediction could not be recorded.',
+          };
+        }
+      });
+    case 'CHECK_PREDICTIONS':
+      return queueBrowserLedger(async (): Promise<ExtensionReply> => {
+        const revision = browserRevision,
+          records = [...(browserState.predictions ?? [])];
+        for (const prediction of records.filter((p) => p.status === 'pending').slice(0, 3)) {
+          try {
+            const bars = await fetchOutcomeBars(
+              prediction.marketId,
+              prediction.nextBarAt,
+              prediction.expiresAt,
+            );
+            records[records.findIndex((p) => p.id === prediction.id)] = evaluatePrediction(
+              prediction,
+              bars,
+              Date.now(),
+            );
+          } catch (error) {
+            records[records.findIndex((p) => p.id === prediction.id)] = {
+              ...prediction,
+              lastCheckedAt: Date.now(),
+              checkError: feedFailure(error, browserState.settings.preferences).message,
+            };
+          }
+        }
+        if (revision === browserRevision) browserState = { ...browserState, predictions: records };
+        emit();
+        return { ok: true, state: browserState };
+      });
+    case 'CLEAR_PREDICTIONS':
+      return queueBrowserLedger(async (): Promise<ExtensionReply> => {
+        if (!message.confirmed) return { ok: false, error: 'Confirm clearing the entire ledger.' };
+        browserRevision++;
+        browserState = { ...browserState, predictions: [] };
+        emit();
+        return { ok: true, state: browserState };
+      });
     case 'GET_STATE':
     case 'GET_OPTIONS':
       return { ok: true, state: browserState };
@@ -97,7 +191,8 @@ export function subscribeWorkspace(listener: () => void): () => void {
   }
   const onChange = (changes: Record<string, chrome.storage.StorageChange>, area: string) => {
     if (
-      (area === 'local' && STORAGE_KEYS.preferences in changes) ||
+      (area === 'local' &&
+        (STORAGE_KEYS.preferences in changes || STORAGE_KEYS.predictions in changes)) ||
       (area === 'session' && (STORAGE_KEYS.snapshot in changes || STORAGE_KEYS.failure in changes))
     )
       listener();

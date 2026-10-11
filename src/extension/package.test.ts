@@ -14,8 +14,14 @@ describe('least-privilege Chrome/Edge installable package', () => {
     expect(manifest.options_ui.page).toBe('options.html');
     expect(manifest.description.length).toBeLessThanOrEqual(132);
   });
-  it('has only storage/alarms/sidePanel and two specific provider hosts', () => {
-    expect(manifest.permissions).toEqual(['storage', 'alarms', 'sidePanel']);
+  it('uses temporary activeTab/scripting, no content scripts or permanent all-sites access', () => {
+    expect(manifest.permissions).toEqual([
+      'storage',
+      'alarms',
+      'sidePanel',
+      'activeTab',
+      'scripting',
+    ]);
     expect(manifest.host_permissions).toEqual([
       'https://data-api.binance.vision/*',
       'https://api.twelvedata.com/*',
