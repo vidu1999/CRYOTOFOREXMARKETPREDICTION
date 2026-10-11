@@ -1,0 +1,12 @@
+VECTOR LIVE — CHROME / EDGE EXTENSION
+
+1. Extract this ZIP and keep the vector-live-extension folder.
+2. Open chrome://extensions or edge://extensions.
+3. Enable Developer mode, choose Load unpacked, select the folder containing manifest.json.
+4. Pin Vector from the browser extension menu. Crypto uses public Binance market data (no key).
+5. For forex, open Vector Settings and enter a Twelve Data market-data key privately. Coverage, latency and quotas depend on your plan. Never share API keys in chat.
+6. Use the expand button for the native side panel; on unsupported browsers a full extension tab is the fallback.
+
+This package is locally loaded, not published to the Chrome Web Store. The extension uses polled market snapshots, not tick-by-tick streaming. No exchange balances or webpages are read, and no orders are placed. Technical strength is not accuracy or probability. Real-market performance has not been independently validated. No guaranteed returns or passive income. API failures never fall back to demo prices.
+
+Permissions: storage, alarms, sidePanel. Network access: data-api.binance.vision and api.twelvedata.com only. Background refresh is off by default. Credentials stay in local extension storage and are not synced or exported.

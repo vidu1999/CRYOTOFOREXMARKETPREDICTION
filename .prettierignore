@@ -9,3 +9,6 @@ test-results
 
 artifacts/*.zip
 public/*.zip
+
+# Checked-in browser bundle; regenerate with npm run build:extension.
+vector-live-extension/

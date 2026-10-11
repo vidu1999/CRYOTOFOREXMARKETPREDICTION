@@ -9,7 +9,7 @@ test('packaged MV3 loads native worker, popup and private options with real brow
     !!process.env.CHROMIUM_EXECUTABLE_PATH,
     'Custom serverless browser does not support native extensions. Run with full Playwright Chromium.',
   );
-  const path = resolve('dist/extension');
+  const path = resolve('vector-live-extension');
   const context = await chromium.launchPersistentContext('', {
     channel: 'chromium',
     headless: true,

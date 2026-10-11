@@ -1,10 +1,16 @@
 # Install Vector Live in Chrome / Edge
 
-## 1. Get the ZIP
+## 1. Get the ready-to-load folder
 
-Use **Download extension** on the preview, or `artifacts/vector-live-extension.zip`.
+**From GitHub (no build required):**
 
-Extract it. Keep the extracted **`vector-live-extension`** folder in a permanent location. It contains `manifest.json`, the popup/panel/options pages, `background.js`, `assets/`, and `icons/`. Do not select the ZIP itself or the repository's source `extension/` folder.
+1. Open the [branch containing the installable folder](https://github.com/vidu1999/CRYOTOFOREXMARKETPREDICTION/tree/arena/06524d3c-cryotoforexmarketprediction/vector-live-extension).
+2. Download the [repository ZIP for that branch](https://github.com/vidu1999/CRYOTOFOREXMARKETPREDICTION/archive/refs/heads/arena/06524d3c-cryotoforexmarketprediction.zip), or choose **Code → Download ZIP** from the branch's repository page.
+3. Extract the repository ZIP and find **`vector-live-extension`** inside the extracted repository. Select this inner folder when loading the extension—not the outer repository folder.
+
+**Alternatively:** use **Download extension** in the preview, or `artifacts/vector-live-extension.zip` after a local build, then extract that ZIP.
+
+Keep the **`vector-live-extension`** folder in a permanent location. It contains `manifest.json`, the popup/panel/options pages, `background.js`, `assets/`, and `icons/`. No npm/build command is needed for the checked-in folder. Do not select the ZIP itself or the repository's source `extension/` folder.
 
 ## 2. Load unpacked
 

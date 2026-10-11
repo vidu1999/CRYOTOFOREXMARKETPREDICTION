@@ -1,4 +1,4 @@
-import { readFile, writeFile, readdir, mkdir, copyFile } from 'node:fs/promises';
+import { readFile, writeFile, readdir, mkdir, copyFile, cp, rm } from 'node:fs/promises';
 import { resolve, relative, join } from 'node:path';
 import { deflateSync } from 'node:zlib';
 import { zipSync, unzipSync } from 'fflate';
@@ -148,6 +148,12 @@ for (const [name, contents] of Object.entries(archive)) {
       throw new Error('Demo research data leaked into the live extension bundle.');
   }
 }
+// GitHub downloads must include a folder users can load without Node/Vite.
+// Only this dedicated generated directory is replaced; source and repository stay intact.
+const installable = resolve('vector-live-extension');
+await rm(installable, { recursive: true, force: true });
+await cp(destination, installable, { recursive: true });
+console.log('Updated ready-to-load GitHub folder: vector-live-extension/');
 console.log(
   `Packaged ${Object.keys(files).length} files (${Math.round(zip.length / 1024)} KiB): artifacts/vector-live-extension.zip`,
 );

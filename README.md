@@ -6,9 +6,11 @@ An **installable Manifest V3 desktop browser extension**, not just a web dashboa
 
 ## Install the extension
 
-Download **`artifacts/vector-live-extension.zip`**, or use **Download extension** in the running preview. See [the installation guide](docs/INSTALL_EXTENSION.md).
+The ready-to-load **[`vector-live-extension/`](vector-live-extension/)** folder is included in this GitHub branch—**no build tools are required to install it**. On GitHub, choose **Code → Download ZIP** for the branch containing this folder, extract the repository, and keep its inner `vector-live-extension` folder in a permanent location. See [the installation guide](docs/INSTALL_EXTENSION.md).
 
-1. Unzip the package to a permanent folder.
+Alternatively, use **Download extension** in the running preview or `artifacts/vector-live-extension.zip` after a local build.
+
+1. Extract the GitHub repository ZIP or extension ZIP to a permanent folder.
 2. Open `chrome://extensions` or `edge://extensions` in **desktop Chrome/Edge 116+**.
 3. Enable **Developer mode**, choose **Load unpacked**, and select the extracted **`vector-live-extension`** folder containing `manifest.json`.
 4. Pin **Vector Live** from the browser's extension menu. Open its popup; use the expand button for the native side panel. If the browser cannot open the panel, a full extension tab is the fallback.
@@ -83,13 +85,13 @@ Use **Node.js 22.18+**.
 
 ```bash
 npm ci
-npm run build:extension  # Typecheck; dist/extension + artifacts ZIP + preview download
+npm run build:extension  # Typecheck; refresh vector-live-extension/ + dist/extension + ZIP
 npm run dev              # Installation site and public-only crypto preview, port 5173
 npm run build            # Extension package, then website in dist/site
 npm run preview          # Serve production website (including ZIP download)
 ```
 
-To develop the native extension, load `dist/extension` unpacked, rebuild after edits and click **Reload** in the browser's extensions page. The root website is only the installer/public preview; its API-key controls are intentionally disabled. Arena preview hosts are allowed, and browser requests never target sandbox localhost backends.
+To develop the native extension, load `vector-live-extension` (or `dist/extension`) unpacked, rebuild after edits and click **Reload** in the browser's extensions page. The root website is only the installer/public preview; its API-key controls are intentionally disabled. Arena preview hosts are allowed, and browser requests never target sandbox localhost backends.
 
 ```bash
 npm test                  # Analytics, providers, protocol, privacy, concurrency and package
@@ -108,7 +110,8 @@ Automated tests use **explicit deterministic provider fixtures and in-memory sto
 ## Source layout
 
 ```text
-extension/manifest.json       MV3, popup, options, side panel, least-privilege hosts
+vector-live-extension/        Checked-in, ready-to-load build for GitHub downloads
+extension/manifest.json       Source manifest: MV3, popup, options, side panel, hosts
 src/extension/                Live-only catalog, adapters, worker, storage, UI, private options
 src/lib/analytics.ts          Reusable causal model and chronological ledger
 src/lib/risk.ts               Currency-aware hypothetical sizing
@@ -118,5 +121,7 @@ tests/fixtures/               Test-only fixtures, never in the shipped extension
 src/extension/*.test.ts       Adapter/security/protocol/concurrency/package unit tests
 tests/e2e/                    Browser UI, native package and research regression tests
 ```
+
+The `vector-live-extension/` directory is intentionally checked in so GitHub users can install without Node.js. Do not hand-edit its hashed bundles; `npm run build:extension` replaces it from source, removing stale assets. Other build directories, dependency caches, generated ZIPs and test results remain ignored.
 
 The older **offline research/demo workspace** is preserved separately at `/research.html` with its [own documentation](docs/research-workspace.md). It is not the live extension, is not shipped inside it, and does not supply its prices or candles.
